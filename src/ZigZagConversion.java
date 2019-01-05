@@ -1,47 +1,47 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Created by Administrator on 2017/7/13.
  */
-public class AddTwoNumbers {
+public class ZigZagConversion {
     public static void main(String[] args) {
-        AddTwoNumbers addTwoNumbers = new AddTwoNumbers();
-
-        ListNode a1 = new ListNode(1);
-        ListNode a2 = new ListNode(8);
-        a1.next = a2;
-
-        ListNode b1 = new ListNode(0);
-
-        ListNode res = addTwoNumbers.addTwoNumbers(a1, b1);
+        new ZigZagConversion().convert("PAYPALISHIRING", 3);
     }
 
-    public static class ListNode {
-        int val;
-        ListNode next;
+    public String convert(String s, int numRows) {
+        if(s.length() <= numRows || numRows < 2)
+            return s;
+        int max = s.length() / (numRows + numRows - 2) + 1;
 
-        ListNode(int x) {
-            val = x;
+        List<StringBuilder> arr = new ArrayList<>();
+        for (int i = 0; i < numRows; i++) {
+            arr.add(new StringBuilder(""));
         }
-    }
 
-    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        ListNode c1 = l1;
-        ListNode c2 = l2;
+        for (int m = 0; m < max; m++) {
+            int start = m * (numRows + numRows - 2);
+            int nextStart = (m + 1) * (numRows + numRows - 2);
 
-        ListNode cur = new ListNode(0);
-        ListNode listNode = cur;
-        int plus = 0;
-        while (c1 != null || c2 != null) {
-            int s = (c1 == null ? 0 : c1.val) + (c2 == null ? 0 : c2.val) + plus;
-            cur.val = s % 10;
-            plus = s > 9 ? 1 : 0;
-            if ((c1 != null && c1.next != null) || (c2 != null && c2.next != null) || plus > 0) {
-                cur.next = new ListNode(1);
+            if (start < s.length()) {
+                arr.get(0).append(s.charAt(start));
             }
 
-            c1 = c1 == null ? null : c1.next;
-            c2 = c2 == null ? null : c2.next;
-            cur = cur.next;
+            for (int i = 1; i <= numRows - 2; i++) {
+                if (start + i < s.length()) {
+                    arr.get(i).append(s.charAt(start + i));
+                }
+
+                if (nextStart - i < s.length()) {
+                    arr.get(i).append(s.charAt(nextStart - i));
+                }
+            }
+
+            if (start + numRows - 1 < s.length()) {
+                arr.get(numRows - 1).append(s.charAt(start + numRows - 1));
+            }
         }
-        return listNode;
+        return arr.stream().collect(Collectors.joining());
     }
 }
